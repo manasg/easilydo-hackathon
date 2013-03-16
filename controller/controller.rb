@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'json'
+require 'pp'
 
 set :port, 80
 set :bind, '0.0.0.0'
@@ -21,6 +22,6 @@ end
 
 post "/test" do
     data = JSON.parse(request.body.read)
-    puts data
+    pp data
     "cool..thanks!"
 end
