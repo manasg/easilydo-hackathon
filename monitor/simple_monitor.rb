@@ -8,9 +8,9 @@ alert_threshold_sec = 1.5
 
 iterations = 15
 
-endpoints = %w{ http://localhost:4567/ }
+endpoints = %w{ http://localhost:2001/ http://localhost:2002/ }
 
-@asked_human = false
+@asked_human = {}
 
 history = {}
 alarm_history = {}
@@ -18,6 +18,7 @@ alarm_history = {}
 endpoints.each do |url| 
     history[url] = []
     alarm_history[url] = []
+    @asked_human[url] = false
 end
 
 def fetch_url(url)
@@ -48,11 +49,11 @@ def alert(url, resp_time)
 end
 
 def ask_human(url)
-    if @asked_human
+    if @asked_human[url]
         puts "not asking as we have already asked" 
     else
         puts "asking human! #{url} is flapping"
-        @asked_human = true
+        @asked_human[url] = true
     end
 end
 
