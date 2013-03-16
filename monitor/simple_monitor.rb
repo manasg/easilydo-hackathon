@@ -1,6 +1,7 @@
 require "net/http"
 require "uri"
 require "pp"
+require 'easilydo_trigger'
 
 INTERVAL_SEC = 1.0 + (1 * rand)
 
@@ -57,7 +58,11 @@ def ask_human(id,url)
         puts "not asking as we have already asked" 
     else
         puts "asking human! #{url} on #{id} is flapping"
-        @asked_human[id] = true
+        t = EasilydoTrigger.new
+	payload = t.construct_payload(id, url)
+	t.post_payload(payload)
+ 
+	@asked_human[id] = true
     end
 end
 
