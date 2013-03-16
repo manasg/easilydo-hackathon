@@ -12,8 +12,12 @@ get "/" do
     "This is the control server"
 end
 
-post "/remove_from_elb/:instance_id" do
-    "Received request to remove #{instance_id} from ELB"    
+post "/remove_from_elb" do
+    data = JSON.parse(request.body.read)
+    "kthnkxbye!" unless data
+    pp data
+    instance_id = data['instance_id']
+    puts "Received request to remove #{instance_id} from ELB"
 end
 
 get "/test" do
