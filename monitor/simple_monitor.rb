@@ -6,19 +6,22 @@ INTERVAL_SEC = 1.0 + (1 * rand)
 
 alert_threshold_sec = 1.5
 
-iterations = 15
+iterations = 20
 
-endpoints = %w{ http://localhost:2001/ http://localhost:2002/ }
+endpoints = [{ "id" => "i-0c502462", "url" => "http://ec2-184-72-70-153.compute-1.amazonaws.com/"},
+                { "id" => "i-7a9f3a11", "url" => " http://ec2-54-224-54-120.compute-1.amazonaws.com/"  }
+            ]
 
 @asked_human = {}
 
 history = {}
 alarm_history = {}
 
-endpoints.each do |url| 
-    history[url] = []
-    alarm_history[url] = []
-    @asked_human[url] = false
+endpoints.each do |e| 
+    id = e['id']
+    history[id] = []
+    alarm_history[id] = []
+    @asked_human[id] = false
 end
 
 def fetch_url(url)
@@ -44,16 +47,17 @@ def flapping(alarm_history , last_n = 5, state_change_threshold = 2)
     state_change > state_change_threshold
 end
 
-def alert(url, resp_time)
+def alert(id, url, resp_time)
+    url = 
     puts "#{Time.now} oh no! This #{url} took #{resp_time} seconds!"
 end
 
-def ask_human(url)
-    if @asked_human[url]
+def ask_human(id,url)
+    if @asked_human[id]
         puts "not asking as we have already asked" 
     else
-        puts "asking human! #{url} is flapping"
-        @asked_human[url] = true
+        puts "asking human! #{url} on #{id} is flapping"
+        @asked_human[id] = true
     end
 end
 
@@ -65,7 +69,10 @@ end
 
 
 iterations.times do 
-    endpoints.each do |url|
+    endpoints.each do |ep|
+        id = ep['id']
+        url = ep['url']
+
         alarm = false
         begin_time = Time.now
         resp = fetch_url(url)
@@ -73,20 +80,20 @@ iterations.times do
 
         resp_time = end_time - begin_time
         
-        history[url] << resp_time 
+        history[id] << resp_time 
 
         alarm = true if resp_time > alert_threshold_sec
         
-        alarm_history[url] << alarm
+        alarm_history[id] << alarm
 
         if alarm
-            alert(url, resp_time)
+            alert(id, url, resp_time)
         else
             puts "#{Time.now} This URL #{url} took #{resp_time} seconds"
         end
     
-        if flapping(alarm_history[url])
-            ask_human(url)
+        if flapping(alarm_history[id])
+            ask_human(id,url)
         end
     
     end
