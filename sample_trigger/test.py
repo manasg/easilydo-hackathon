@@ -13,13 +13,13 @@ def run(request=None):
 
     # POST data from trigger code to Do-Engine
     payload = {
-                "doType" : 5505, # ID of the Trigger in EasilyDo Builder
+                "doType" : 5521, # ID of the Trigger in EasilyDo Builder
                 "doResponse" : [{
                     "userName" : "manas@easilydo.com", # EasilyDo user name
                     "uniqueId" : base64.urlsafe_b64encode(os.urandom(30)), 
                     "variables" : {
-                        "instance_id" : "i-999999999",
-                        "server_name" : "webserver-99"
+                        "instance_id" : "i-test1234",
+                        "server_name" : "webserver-LUFT"
                         }
                     }]  
                 }

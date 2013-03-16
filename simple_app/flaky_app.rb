@@ -1,7 +1,8 @@
 require 'rubygems'
 require 'sinatra'
 
-set :port, 2001
+set :port, 80
+set :bind, '0.0.0.0'
 
 def be_slow 
     # current time, if second is even - be slow!
